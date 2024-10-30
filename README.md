@@ -13,7 +13,8 @@ Collectors:<br>
         tail-drops.json
 
 Probes:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Probe files have to be applied to each individual Blueprint that you desire to monitor and report on via __Blueprints -> <blueprint_name> -> Analytics -> Probes -> Create Probe -> Import Probes__
+&nbsp;&nbsp;&nbsp;&nbsp;Probe files have to be applied to each individual Blueprint that you desire to monitor and report on via
+&nbsp;&nbsp;&nbsp;&nbsp;__Blueprints -> <blueprint_name> -> Analytics -> Probes -> Create Probe -> Import Probes__
 
     Files:
         Probe - ECN Anomalies-RoC.json
@@ -22,7 +23,8 @@ Probes:<br>
         Probe - Tail Drop Anomalies - TS.json
 
 Dashboard:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Dashboard files have to be applied to each individual Blueprint that you desire to monitor and report on via __Blueprints -> <blueprint_name> -> Analytics -> Dashboards -> Create Dashboard -> Import Dashboards__
+&nbsp;&nbsp;&nbsp;&nbsp;Dashboard files have to be applied to each individual Blueprint that you desire to monitor and report on via
+&nbsp;&nbsp;&nbsp;&nbsp;__Blueprints -> <blueprint_name> -> Analytics -> Dashboards -> Create Dashboard -> Import Dashboards__
 <br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;Each dashboard file contains the Widgets used by it.
 

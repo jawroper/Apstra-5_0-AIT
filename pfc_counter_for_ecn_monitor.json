@@ -1,0 +1,61 @@
+{
+  "description": "",
+  "application_schema": {
+    "properties": {
+      "key": {
+        "properties": {
+          "intf_name": {
+            "type": "string"
+          },
+          "priority_number": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "intf_name",
+          "priority_number"
+        ],
+        "type": "object"
+      },
+      "value": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "key",
+      "value"
+    ],
+    "type": "object"
+  },
+  "service_name": "pfc_counter_for_ecn_monitor",
+  "storage_schema_path": "aos.sdk.telemetry.schemas.iba_integer_data",
+  "collectors": [
+    {
+      "platform": {
+        "os_type": "junos_evo",
+        "os_version": "21.2r2",
+        "family": "acx,acx-f,acx-qfx-7k,ptx,ptx1k,qfx-ms-fixed",
+        "model": ""
+      },
+      "source_type": "cli",
+      "cli": "show interfaces extensive",
+      "query": {
+        "accessors": {
+          "intf_name": "/interface-information/physical-interface/name",
+          "priority_number": "/interface-information/physical-interface/ethernet-mac-pfc-statistics/mac-pfc-dot1p",
+          "value": "/interface-information/physical-interface/ethernet-mac-pfc-statistics/output-mac-pfc-frames"
+        },
+        "keys": {
+          "intf_name": "intf_name",
+          "priority_number": "priority_number"
+        },
+        "values": {
+          "value": "int(value) if value else int(0)"
+        },
+        "filter": ""
+      },
+      "relaxed_schema_validation": true
+    }
+  ],
+  "version": "version_0"
+}

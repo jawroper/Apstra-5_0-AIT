@@ -1,0 +1,103 @@
+{
+  "label": "Queue_stats",
+  "processors": [
+    {
+      "name": "Extensible Service Collector",
+      "type": "extensible_data_collector",
+      "properties": {
+        "service_name": "Queue_Stats",
+        "service_interval": "120",
+        "value_map": {},
+        "graph_query": [
+          "match(node('system', name='system', deploy_mode='deploy', role=is_in(['leaf', 'spine'])))"
+        ],
+        "service_input": "''",
+        "query_group_by": [],
+        "keys": [],
+        "ingestion_filter": {},
+        "data_type": "dynamic",
+        "query_tag_filter": {
+          "filter": {},
+          "operation": "and"
+        },
+        "execution_count": "-1",
+        "system_id": "system.system_id",
+        "query_expansion": {},
+        "enable_streaming": false
+      },
+      "inputs": {},
+      "outputs": {
+        "out": "Extensible Service Collector"
+      }
+    },
+    {
+      "name": "Sum RED",
+      "type": "sum",
+      "properties": {
+        "group_by": [
+          "system_id",
+          "Physical_Interface_Name",
+          "Queue_Number"
+        ],
+        "enable_streaming": false
+      },
+      "inputs": {
+        "in": {
+          "stage": "Extensible Service Collector",
+          "column": "Pkts_Drop_RED"
+        }
+      },
+      "outputs": {
+        "out": "Sum RED out"
+      }
+    },
+    {
+      "name": "Sum Trail",
+      "type": "sum",
+      "properties": {
+        "group_by": [
+          "system_id",
+          "Physical_Interface_Name",
+          "Queue_Number"
+        ],
+        "enable_streaming": false
+      },
+      "inputs": {
+        "in": {
+          "stage": "Extensible Service Collector",
+          "column": "Pkts_Drop_Tail"
+        }
+      },
+      "outputs": {
+        "out": "Sum Tail out"
+      }
+    }
+  ],
+  "stages": [
+    {
+      "name": "Extensible Service Collector",
+      "retention_duration": 86400,
+      "units": {
+        "Pkts_Drop_RED": "",
+        "Pkts_TX": "",
+        "Pkts_Drop_Tail": ""
+      }
+    },
+    {
+      "name": "Sum Tail out",
+      "retention_duration": 86400,
+      "units": {
+        "total_count": "",
+        "value": ""
+      }
+    },
+    {
+      "name": "Sum RED out",
+      "retention_duration": 86400,
+      "units": {
+        "total_count": "",
+        "value": ""
+      }
+    }
+  ]
+}

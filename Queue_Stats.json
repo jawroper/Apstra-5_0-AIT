@@ -1,0 +1,81 @@
+{
+  "description": "show interface queue",
+  "application_schema": {
+    "properties": {
+      "key": {
+        "properties": {
+          "Physical_Interface_Name": {
+            "type": "string"
+          },
+          "Queue_Number": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Physical_Interface_Name",
+          "Queue_Number"
+        ],
+        "type": "object"
+      },
+      "value": {
+        "properties": {
+          "Pkts_Drop_RED": {
+            "type": "integer"
+          },
+          "Pkts_Drop_Tail": {
+            "type": "integer"
+          },
+          "Pkts_TX": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "Pkts_Drop_RED",
+          "Pkts_Drop_Tail",
+          "Pkts_TX"
+        ],
+        "type": "object"
+      }
+    },
+    "required": [
+      "key",
+      "value"
+    ],
+    "type": "object"
+  },
+  "service_name": "Queue_Stats",
+  "storage_schema_path": "aos.sdk.telemetry.schemas.iba_data",
+  "collectors": [
+    {
+      "platform": {
+        "os_type": "junos_evo",
+        "os_version": "21.2r2",
+        "family": "acx,acx-f,acx-qfx-7k,ptx,ptx1k,qfx-ms-fixed",
+        "model": ""
+      },
+      "source_type": "cli",
+      "cli": "show interfaces queue",
+      "query": {
+        "accessors": {
+          "Physical_Interface_Name": "/interface-information/physical-interface/name",
+          "Queue_Number": "/interface-information/physical-interface/queue-counters/queue/queue-number",
+          "Pkts_Drop_RED": "/interface-information/physical-interface/queue-counters/queue/queue-counters-red-packets",
+          "Pkts_Drop_Tail": "/interface-information/physical-interface/queue-counters/queue/queue-counters-tail-drop-packets",
+          "Pkts_TX": "/interface-information/physical-interface/queue-counters/queue/queue-counters-trans-packets"
+        },
+        "keys": {
+          "Physical_Interface_Name": "Physical_Interface_Name",
+          "Queue_Number": "Queue_Number"
+        },
+        "values": {
+          "Pkts_Drop_RED": "int(Pkts_Drop_RED or 0)",
+          "Pkts_Drop_Tail": "int(Pkts_Drop_Tail or 0)",
+          "Pkts_TX": "int(Pkts_TX or 0)"
+        },
+        "filter": "keys['Physical_Interface_Name'].startswith([\"et-\",\"ge-\",\"xe-\"])"
+      },
+      "relaxed_schema_validation": true
+    }
+  ],
+  "version": "version_0"
+}

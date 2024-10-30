@@ -1,0 +1,110 @@
+{
+  "label": "Tail Drop Anomalies - TS",
+  "processors": [
+    {
+      "name": "Interface Queue collector",
+      "type": "extensible_data_collector",
+      "properties": {
+        "service_name": "interface_queue_drop",
+        "service_interval": "15",
+        "value_map": {},
+        "graph_query": [
+          "match(node('system', name='system', deploy_mode='deploy', role=is_in(['leaf', 'spine'])).out('hosted_interfaces').node('interface', name='iface', if_name=not_none()).out('link').node('link', link_type='ethernet', name='link').in_('link').node('interface', name='remote_iface').in_('hosted_interfaces').node('system', role=is_in(['spine', 'access', 'superspine']), deploy_mode='deploy', name='remote_system'))"
+        ],
+        "service_input": "''",
+        "query_group_by": [],
+        "keys": [
+          "interface_name",
+          "queue_name"
+        ],
+        "interface_name": "iface.if_name",
+        "ingestion_filter": {},
+        "data_type": "static",
+        "query_tag_filter": {
+          "filter": {},
+          "operation": "and"
+        },
+        "execution_count": "-1",
+        "system_id": "system.system_id",
+        "query_expansion": {},
+        "enable_streaming": false,
+        "queue_name": "\"no-loss\""
+      },
+      "inputs": {},
+      "outputs": {
+        "out": "Interface Queue collector"
+      }
+    },
+    {
+      "name": "Periodic Change",
+      "type": "periodic_change",
+      "properties": {
+        "graph_query": [],
+        "period": "15",
+        "enable_streaming": false
+      },
+      "inputs": {
+        "in": {
+          "stage": "Interface Queue collector",
+          "column": "value"
+        }
+      },
+      "outputs": {
+        "out": "Periodic Change"
+      }
+    },
+    {
+      "name": "Range",
+      "type": "range_check",
+      "properties": {
+        "property": "value",
+        "raise_on_nan": false,
+        "raise_anomaly": true,
+        "graph_query": [],
+        "anomaly_retention_duration": 2592000,
+        "range": {
+          "min": 1
+        },
+        "enable_streaming": false,
+        "anomaly_retention_size": 1073741824,
+        "enable_anomaly_logging": true
+      },
+      "inputs": {
+        "in": {
+          "stage": "Periodic Change",
+          "column": "value"
+        }
+      },
+      "outputs": {
+        "out": "Range"
+      }
+    }
+  ],
+  "stages": [
+    {
+      "name": "Interface Queue collector",
+      "enable_metric_logging": true,
+      "retention_duration": 2592000,
+      "units": {
+        "value": ""
+      }
+    },
+    {
+      "name": "Periodic Change",
+      "enable_metric_logging": true,
+      "retention_duration": 2592000,
+      "description": "Periodic RoC",
+      "units": {
+        "value": ""
+      }
+    },
+    {
+      "name": "Range",
+      "enable_metric_logging": true,
+      "retention_duration": 2592000,
+      "units": {
+        "value": ""
+      }
+    }
+  ]
+}

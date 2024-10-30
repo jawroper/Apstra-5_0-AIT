@@ -1,0 +1,87 @@
+{
+  "description": "",
+  "application_schema": {
+    "properties": {
+      "key": {
+        "properties": {
+          "interface_name": {
+            "type": "string"
+          },
+          "queue_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "interface_name",
+          "queue_name"
+        ],
+        "type": "object"
+      },
+      "value": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "key",
+      "value"
+    ],
+    "type": "object"
+  },
+  "service_name": "interface_queue_drop",
+  "storage_schema_path": "aos.sdk.telemetry.schemas.iba_integer_data",
+  "collectors": [
+    {
+      "platform": {
+        "os_type": "junos_evo",
+        "os_version": "22.2r2",
+        "family": "acx,acx-f,acx-qfx-7k,ptx,ptx1k,qfx-ms-fixed",
+        "model": ""
+      },
+      "source_type": "cli",
+      "cli": "show interfaces queue",
+      "query": {
+        "accessors": {
+          "interface_name": "/interface-information/physical-interface/name",
+          "queue_name": "/interface-information/physical-interface/queue-counters/queue/forwarding-class-name",
+          "value": "/interface-information/physical-interface/queue-counters/queue/queue-counters-tail-drop-packets"
+        },
+        "keys": {
+          "interface_name": "interface_name",
+          "queue_name": "queue_name"
+        },
+        "values": {
+          "value": "int(value) if value else int(0)"
+        },
+        "filter": "keys['interface_name'].startswith([\"et-\", \"xe-\", \"ge-\"])"
+      },
+      "relaxed_schema_validation": false
+    },
+    {
+      "platform": {
+        "os_type": "junos_evo",
+        "os_version": "22.2r2",
+        "family": "acx,acx-f,acx-qfx-7k,ptx,ptx1k",
+        "model": ""
+      },
+      "source_type": "cli",
+      "cli": "show interfaces queue",
+      "query": {
+        "accessors": {
+          "interface_name": "/interface-information/physical-interface/name",
+          "queue_name": "/interface-information/physical-interface/queue-counters/queue/forwarding-class-name",
+          "value": "/interface-information/physical-interface/queue-counters/queue/queue-counters-tail-drop-packets"
+        },
+        "keys": {
+          "interface_name": "interface_name",
+          "queue_name": "queue_name"
+        },
+        "values": {
+          "value": "int(value) if value else int(0)"
+        },
+        "filter": "keys['interface_name'].startswith([\"et-\", \"xe-\", \"ge-\"])"
+      },
+      "relaxed_schema_validation": false
+    }
+  ],
+  "version": "version_0"
+}

@@ -1,0 +1,447 @@
+{
+  "label": "AI/ML Details",
+  "description": "",
+  "grid": [
+    [
+      {
+        "label": "ECN Rate of Change Detailed",
+        "description": "",
+        "type": "stage",
+        "probe_id": "3d16fd95-bc7a-4c54-9b5e-90ac53e5e1ee",
+        "stage_name": "Periodic Change",
+        "filter": "",
+        "visible_columns": [
+          "properties.system_id",
+          "properties.Interface",
+          "value"
+        ],
+        "orderby": "",
+        "max_items": 100,
+        "anomalous_only": false,
+        "show_context": false,
+        "spotlight_mode": false,
+        "data_source": "time_series",
+        "time_series_duration": 604800,
+        "aggregation_period": 15,
+        "aggregation_type": "last",
+        "combine_graphs": "none"
+      }
+    ],
+    [
+      {
+        "label": "PFC Rate of Change Detailed",
+        "description": "",
+        "type": "stage",
+        "probe_id": "68c937f2-de3d-452c-83a6-d3fcc9f237c1",
+        "stage_name": "Periodic Change",
+        "filter": "",
+        "visible_columns": [
+          "properties.system_id",
+          "properties.intf_name",
+          "properties.priority_number",
+          "value"
+        ],
+        "orderby": "",
+        "max_items": 100,
+        "anomalous_only": false,
+        "show_context": false,
+        "spotlight_mode": false,
+        "data_source": "time_series",
+        "time_series_duration": 604800,
+        "aggregation_period": 15,
+        "aggregation_type": "last",
+        "combine_graphs": "none"
+      }
+    ],
+    [
+      {
+        "label": "Tail Drops Rate of Change Detailed",
+        "description": "",
+        "type": "stage",
+        "probe_id": "50cac5be-be7d-47e0-86f3-bb8ed73233ae",
+        "stage_name": "Periodic Change",
+        "filter": "",
+        "visible_columns": [
+          "properties.system_id",
+          "properties.interface_name",
+          "properties.queue_name",
+          "value"
+        ],
+        "orderby": "",
+        "max_items": 100,
+        "anomalous_only": false,
+        "show_context": false,
+        "spotlight_mode": false,
+        "data_source": "time_series",
+        "time_series_duration": 604800,
+        "aggregation_period": 15,
+        "aggregation_type": "last",
+        "combine_graphs": "none"
+      }
+    ]
+  ],
+  "predefined_dashboard": "",
+  "default": false,
+  "probes": {
+    "3d16fd95-bc7a-4c54-9b5e-90ac53e5e1ee": {
+      "label": "ECN Anomalies-RoC",
+      "description": "",
+      "processors": [
+        {
+          "name": "Extensible Service Data Collector",
+          "type": "extensible_data_collector",
+          "properties": {
+            "service_name": "ecn_marked_packets",
+            "service_interval": "15",
+            "value_map": {},
+            "graph_query": [
+              "match(node('system', name='system', deploy_mode='deploy', role=is_in(['leaf', 'spine'])).out('hosted_interfaces').node('interface', name='iface', if_name=not_none()).out('link').node('link', link_type='ethernet', name='link').in_('link').node('interface', name='remote_iface').in_('hosted_interfaces').node('system', role=is_in(['spine', 'access', 'superspine']), deploy_mode='deploy', name='remote_system'))",
+              "match(node('system', name='system', deploy_mode='deploy', role=is_in(['leaf', 'access'])).out('hosted_interfaces').node('interface', name='iface', if_name=not_none(), operation_state='up').out('link').node('link', link_type='ethernet', name='link').in_('link').node('interface').in_('hosted_interfaces').node('system', role='generic', name='remote_system'))"
+            ],
+            "service_input": "''",
+            "query_group_by": [],
+            "keys": [
+              "Interface"
+            ],
+            "ingestion_filter": {},
+            "data_type": "static",
+            "query_tag_filter": {
+              "filter": {},
+              "operation": "and"
+            },
+            "Interface": "iface.if_name",
+            "execution_count": "-1",
+            "system_id": "system.system_id",
+            "query_expansion": {},
+            "enable_streaming": true
+          },
+          "inputs": {},
+          "outputs": {
+            "out": "Extensible Service Data Collector"
+          }
+        },
+        {
+          "name": "Periodic Change",
+          "type": "periodic_change",
+          "properties": {
+            "graph_query": [],
+            "period": "15",
+            "enable_streaming": true
+          },
+          "inputs": {
+            "in": {
+              "stage": "Extensible Service Data Collector",
+              "column": "value"
+            }
+          },
+          "outputs": {
+            "out": "Periodic Change"
+          }
+        },
+        {
+          "name": "Range",
+          "type": "range_check",
+          "properties": {
+            "property": "value",
+            "raise_on_nan": false,
+            "raise_anomaly": true,
+            "graph_query": [],
+            "anomaly_retention_duration": 86400,
+            "range": {
+              "min": 199
+            },
+            "enable_streaming": true,
+            "anomaly_retention_size": 1073741824,
+            "enable_anomaly_logging": false
+          },
+          "inputs": {
+            "in": {
+              "stage": "Periodic Change",
+              "column": "value"
+            }
+          },
+          "outputs": {
+            "out": "Range"
+          }
+        }
+      ],
+      "predefined_probe": null,
+      "stages": [
+        {
+          "name": "Extensible Service Data Collector",
+          "description": "",
+          "units": {
+            "value": ""
+          },
+          "enable_metric_logging": true,
+          "retention_duration": 604800,
+          "retention_size": 0,
+          "graph_annotation_properties": {}
+        },
+        {
+          "name": "Periodic Change",
+          "description": "ECN RoC Periodic",
+          "units": {
+            "value": ""
+          },
+          "enable_metric_logging": true,
+          "retention_duration": 2592000,
+          "retention_size": 0,
+          "graph_annotation_properties": {}
+        },
+        {
+          "name": "Range",
+          "description": "ECN RoC Range",
+          "units": {
+            "value": ""
+          },
+          "enable_metric_logging": true,
+          "retention_duration": 2592000,
+          "retention_size": 0,
+          "graph_annotation_properties": {}
+        }
+      ]
+    },
+    "68c937f2-de3d-452c-83a6-d3fcc9f237c1": {
+      "label": "PFC Anomalies-RoC",
+      "description": "",
+      "processors": [
+        {
+          "name": "Extensible Service Data Collector",
+          "type": "extensible_data_collector",
+          "properties": {
+            "service_name": "pfc_counter_for_ecn_monitor",
+            "service_interval": "15",
+            "value_map": {},
+            "graph_query": [
+              "match(node('system', name='system', deploy_mode='deploy', role=is_in(['leaf', 'spine'])).out('hosted_interfaces').node('interface', name='iface', if_name=not_none()).out('link').node('link', link_type='ethernet', name='link').in_('link').node('interface', name='remote_iface').in_('hosted_interfaces').node('system', role=is_in(['spine', 'access', 'superspine']), deploy_mode='deploy', name='remote_system'))",
+              "match(node('system', name='system', deploy_mode='deploy', role=is_in(['leaf', 'access'])).out('hosted_interfaces').node('interface', name='iface', if_name=not_none(), operation_state='up').out('link').node('link', link_type='ethernet', name='link').in_('link').node('interface').in_('hosted_interfaces').node('system', role='generic', name='remote_system'))"
+            ],
+            "service_input": "''",
+            "query_group_by": [],
+            "keys": [
+              "intf_name",
+              "priority_number"
+            ],
+            "ingestion_filter": {},
+            "data_type": "static",
+            "query_tag_filter": {
+              "filter": {},
+              "operation": "and"
+            },
+            "execution_count": "-1",
+            "intf_name": "iface.if_name",
+            "system_id": "system.system_id",
+            "query_expansion": {},
+            "enable_streaming": true,
+            "priority_number": "\"3\""
+          },
+          "inputs": {},
+          "outputs": {
+            "out": "Extensible Service Data Collector"
+          }
+        },
+        {
+          "name": "Periodic Change",
+          "type": "periodic_change",
+          "properties": {
+            "graph_query": [],
+            "period": "15",
+            "enable_streaming": true
+          },
+          "inputs": {
+            "in": {
+              "stage": "Extensible Service Data Collector",
+              "column": "value"
+            }
+          },
+          "outputs": {
+            "out": "Periodic Change"
+          }
+        },
+        {
+          "name": "Range",
+          "type": "range_check",
+          "properties": {
+            "property": "value",
+            "raise_on_nan": false,
+            "raise_anomaly": true,
+            "graph_query": [],
+            "anomaly_retention_duration": 86400,
+            "range": {
+              "min": 300
+            },
+            "enable_streaming": false,
+            "anomaly_retention_size": 1073741824,
+            "enable_anomaly_logging": true
+          },
+          "inputs": {
+            "in": {
+              "stage": "Periodic Change",
+              "column": "value"
+            }
+          },
+          "outputs": {
+            "out": "Range"
+          }
+        }
+      ],
+      "predefined_probe": null,
+      "stages": [
+        {
+          "name": "Extensible Service Data Collector",
+          "description": "",
+          "units": {
+            "value": ""
+          },
+          "enable_metric_logging": true,
+          "retention_duration": 86400,
+          "retention_size": 0,
+          "graph_annotation_properties": {}
+        },
+        {
+          "name": "Periodic Change",
+          "description": "PFC RoC Periodic",
+          "units": {
+            "value": ""
+          },
+          "enable_metric_logging": true,
+          "retention_duration": 2592000,
+          "retention_size": 0,
+          "graph_annotation_properties": {}
+        },
+        {
+          "name": "Range",
+          "description": "PFC RoC Range",
+          "units": {
+            "value": ""
+          },
+          "enable_metric_logging": true,
+          "retention_duration": 2592000,
+          "retention_size": 0,
+          "graph_annotation_properties": {}
+        }
+      ]
+    },
+    "50cac5be-be7d-47e0-86f3-bb8ed73233ae": {
+      "label": "Tail Drop Anomalies - TS",
+      "description": "",
+      "processors": [
+        {
+          "name": "Interface Queue collector",
+          "type": "extensible_data_collector",
+          "properties": {
+            "service_name": "interface_queue_drop",
+            "service_interval": "15",
+            "value_map": {},
+            "graph_query": [
+              "match(node('system', name='system', deploy_mode='deploy', role=is_in(['leaf', 'spine'])).out('hosted_interfaces').node('interface', name='iface', if_name=not_none()).out('link').node('link', link_type='ethernet', name='link').in_('link').node('interface', name='remote_iface').in_('hosted_interfaces').node('system', role=is_in(['spine', 'access', 'superspine']), deploy_mode='deploy', name='remote_system'))"
+            ],
+            "service_input": "''",
+            "query_group_by": [],
+            "keys": [
+              "interface_name",
+              "queue_name"
+            ],
+            "interface_name": "iface.if_name",
+            "ingestion_filter": {},
+            "data_type": "static",
+            "query_tag_filter": {
+              "filter": {},
+              "operation": "and"
+            },
+            "execution_count": "-1",
+            "system_id": "system.system_id",
+            "query_expansion": {},
+            "enable_streaming": false,
+            "queue_name": "\"no-loss\""
+          },
+          "inputs": {},
+          "outputs": {
+            "out": "Interface Queue collector"
+          }
+        },
+        {
+          "name": "Periodic Change",
+          "type": "periodic_change",
+          "properties": {
+            "graph_query": [],
+            "period": "15",
+            "enable_streaming": false
+          },
+          "inputs": {
+            "in": {
+              "stage": "Interface Queue collector",
+              "column": "value"
+            }
+          },
+          "outputs": {
+            "out": "Periodic Change"
+          }
+        },
+        {
+          "name": "Range",
+          "type": "range_check",
+          "properties": {
+            "property": "value",
+            "raise_on_nan": false,
+            "raise_anomaly": true,
+            "graph_query": [],
+            "anomaly_retention_duration": 2592000,
+            "range": {
+              "min": 1
+            },
+            "enable_streaming": false,
+            "anomaly_retention_size": 1073741824,
+            "enable_anomaly_logging": true
+          },
+          "inputs": {
+            "in": {
+              "stage": "Periodic Change",
+              "column": "value"
+            }
+          },
+          "outputs": {
+            "out": "Range"
+          }
+        }
+      ],
+      "predefined_probe": null,
+      "stages": [
+        {
+          "name": "Interface Queue collector",
+          "description": "",
+          "units": {
+            "value": ""
+          },
+          "enable_metric_logging": true,
+          "retention_duration": 2592000,
+          "retention_size": 0,
+          "graph_annotation_properties": {}
+        },
+        {
+          "name": "Periodic Change",
+          "description": "Periodic RoC",
+          "units": {
+            "value": ""
+          },
+          "enable_metric_logging": true,
+          "retention_duration": 2592000,
+          "retention_size": 0,
+          "graph_annotation_properties": {}
+        },
+        {
+          "name": "Range",
+          "description": "",
+          "units": {
+            "value": ""
+          },
+          "enable_metric_logging": true,
+          "retention_duration": 2592000,
+          "retention_size": 0,
+          "graph_annotation_properties": {}
+        }
+      ]
+    }
+  }
+}

@@ -3,7 +3,7 @@
 The files in this repository are for Apstra 5.0 environments.  They represent the Collectors, Probes, Widgets, and Dashboards created for monitoring and reporting on lossless Ethernet. They can be imported into any Apstra 5.0 server.
 <br><br>
 Collectors:<br>
-    Collector files are imported via __Analytics -> Service Registry -> Import Service Schema__
+&nbsp;&nbsp;&nbsp;&nbsp;Collector files are imported via __Analytics -> Service Registry -> Import Service Schema__
 
     Files:
         ecn_marked_packets.json
@@ -13,7 +13,7 @@ Collectors:<br>
         tail-drops.json
 
 Probes:<br>
-    Probe files have to be applied to each individual Blueprint that you desire to monitor and report on via __Blueprints -> <blueprint_name> -> Analytics -> Probes -> Create Probe -> Import Probes__
+&nbsp;&nbsp;&nbsp;&nbsp;Probe files have to be applied to each individual Blueprint that you desire to monitor and report on via __Blueprints -> <blueprint_name> -> Analytics -> Probes -> Create Probe -> Import Probes__
 
     Files:
         Probe - ECN Anomalies-RoC.json
@@ -21,10 +21,10 @@ Probes:<br>
         Probe - Queue_stats.json
         Probe - Tail Drop Anomalies - TS.json
 
-Dashboard:
-    Dashboard files have to be applied to each individual Blueprint that you desire to monitor and report on via __Blueprints -> <blueprint_name> -> Analytics -> Dashboards -> Create Dashboard -> Import Dashboards__
+Dashboard:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Dashboard files have to be applied to each individual Blueprint that you desire to monitor and report on via __Blueprints -> <blueprint_name> -> Analytics -> Dashboards -> Create Dashboard -> Import Dashboards__
 <br><br>
-    Each dashboard file contains the Widgets used by it.
+&nbsp;&nbsp;&nbsp;&nbsp;Each dashboard file contains the Widgets used by it.
 
     Files:
         Dashboard - AI_ML Details.json
